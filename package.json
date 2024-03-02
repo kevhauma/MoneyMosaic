@@ -10,7 +10,6 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "prepare": "husky install",
-    "generate:api": "orval --config ./.config/orval.config.js",
     "depcruise": "depcruise src -c .config/.dependency-cruiser.js",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",

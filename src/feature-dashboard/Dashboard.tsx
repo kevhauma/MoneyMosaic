@@ -5,11 +5,8 @@ import { Flex, Typography } from 'antd';
 export const Dashboard = () => {
   const { t } = useTranslation();
   return (
-    <Flex
-      vertical
-    >
-      
-      <Typography >
+    <Flex vertical>
+      <Typography>
         {t('dashboard.welcome')}
         <br />
       </Typography>

@@ -7,8 +7,6 @@ import styled from '@emotion/styled';
 import { ConfigProvider, Flex } from 'antd';
 import { redirect } from 'next/navigation';
 
-
-
 const PageWrapper = styled(Flex)`
   height: 100vh;
   max-height: 100vh;
@@ -21,12 +19,11 @@ type LayoutProps = {
 };
 
 export const Layout = ({ children }: LayoutProps) => {
-
   return (
     <ConfigProvider theme={theme}>
-          <RecoilRoot>
-                      <PageWrapper>{children}</PageWrapper>
-          </RecoilRoot>
-    </ ConfigProvider>
+      <RecoilRoot>
+        <PageWrapper>{children}</PageWrapper>
+      </RecoilRoot>
+    </ConfigProvider>
   );
 };

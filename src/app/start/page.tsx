@@ -1,7 +1,5 @@
-const StartPage = ()=> {
-    return <></>
-}
+const StartPage = () => {
+  return <></>;
+};
 
-
-
-export default  StartPage;
+export default StartPage;

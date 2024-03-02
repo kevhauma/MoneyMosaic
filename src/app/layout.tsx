@@ -10,7 +10,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body style={{margin:0, padding:0}}>
+      <body style={{ margin: 0, padding: 0 }}>
         <Layout>{children}</Layout>
       </body>
     </html>

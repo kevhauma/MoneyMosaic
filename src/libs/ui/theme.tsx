@@ -1,4 +1,4 @@
-import {theme as antTheme} from 'antd'
+import { theme as antTheme } from 'antd';
 //import './themeTypes';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -25,44 +25,41 @@ const grey = {
   // 900: '#2B2D38',
 };
 
-const secondary= {
+const secondary = {
   main: '#FFF',
-}
-const success= {
+};
+const success = {
   main: '#07A092',
   light: '#EEF6F6',
-}
-const error= {
+};
+const error = {
   main: '#DF3F59',
   light: '#faedeb',
-}
-const text= {
+};
+const text = {
   primary: '#2B2D31',
   secondary: '#979797',
-}
+};
 
-
-const background= {
+const background = {
   default: '#060402',
-}
-
+};
 
 export const theme = {
-      token: {
-        colorPrimary: primary.main,
-        colorSecondary: '#00ff00',
-        colorTextBase:  grey['100'],
-        colorBgBase: background.default,
-        colorSuccess: success.main,
-        colorWarning: error.main,
-        grey,
-        primary,
-        secondary,
-        success,
-        error,
-        text,
-        background,
-
-      },
-      algorithm: antTheme.darkAlgorithm,
-  };
+  token: {
+    colorPrimary: primary.main,
+    colorSecondary: '#00ff00',
+    colorTextBase: grey['100'],
+    colorBgBase: background.default,
+    colorSuccess: success.main,
+    colorWarning: error.main,
+    grey,
+    primary,
+    secondary,
+    success,
+    error,
+    text,
+    background,
+  },
+  algorithm: antTheme.darkAlgorithm,
+};

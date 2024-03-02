@@ -1,5 +1,3 @@
-
-
 export type FieldErrorIconProps = {
   errorMessage?: string | null;
 };
@@ -11,5 +9,5 @@ export const FieldErrorIcon = ({ errorMessage }: FieldErrorIconProps) => {
   //     <ErrorIcon htmlColor={theme.palette.error.main} />
   //   </Tooltip>
   // ) : null;
-  return <></>
+  return <></>;
 };

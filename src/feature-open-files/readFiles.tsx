@@ -19,8 +19,10 @@ export const OpenFilesButton = ({
     inputElement.accept = fileTypes.join(',');
     inputElement.multiple = true;
     inputElement.addEventListener('change', async (event) => {
-        const fileReadPromises = Array.from(inputElement.files||[]).map(file=>file.text())
-      const texts = await Promise.all(fileReadPromises)
+      const fileReadPromises = Array.from(inputElement.files || []).map(
+        (file) => file.text()
+      );
+      const texts = await Promise.all(fileReadPromises);
       onOpen(texts);
     });
 
@@ -28,10 +30,7 @@ export const OpenFilesButton = ({
   };
 
   return (
-    <Button
-      onClick={onClick}
-      {...buttonProps}
-    >
+    <Button onClick={onClick} {...buttonProps}>
       {t('form.open')}
     </Button>
   );

@@ -20,7 +20,7 @@ const HoverableIconsWrapper = styled(Flex)`
   }
 `;
 type HoverableIconsProps = PropsWithChildren &
-FlexProps & {
+  FlexProps & {
     icons: React.ReactNode;
   };
 export const HoverableIcons = ({

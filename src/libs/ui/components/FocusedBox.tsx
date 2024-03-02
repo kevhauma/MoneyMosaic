@@ -12,7 +12,6 @@ const SelectableBox = styled(Flex, {
   shouldForwardProp: shouldForwardProp<SelectableBoxProps>(['isSelected']),
 })<SelectableBoxProps>`
   position: relative;
- 
 `;
 /*
  background: ${({ isSelected, theme }) =>

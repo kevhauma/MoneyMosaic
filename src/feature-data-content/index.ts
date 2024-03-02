@@ -1,1 +1,1 @@
-export * from './DataContent'
+export * from './DataContent';

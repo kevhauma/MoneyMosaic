@@ -9,12 +9,7 @@ type Props = InputProps & {
 
 export const InputWrapper = styled(Flex, {
   shouldForwardProp: shouldForwardProp<Props>(['error', 'disabled', 'dirty']),
-})<Props>`
- 
-`;
-
-
-
+})<Props>``;
 
 /*
  display: flex;

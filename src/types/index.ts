@@ -1,1 +1,1 @@
-export * from "./AccountHistoryEntryType"
+export * from './AccountHistoryEntryType';

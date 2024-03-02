@@ -10,11 +10,9 @@ export const FieldWithLabel = ({
 }: PropsWithChildren & FieldLabelProps) => {
   if (label === undefined) return children || null;
   return (
-    <Row >
+    <Row>
       <FormFieldLabel>{label}</FormFieldLabel>
-      <Col flex={1}>
-        {children}
-      </Col>
+      <Col flex={1}>{children}</Col>
     </Row>
   );
 };

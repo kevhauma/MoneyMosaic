@@ -13,7 +13,7 @@ const StyledCircle = styled(Flex, {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
- 
+
   :hover {
     cursor: pointer;
   }

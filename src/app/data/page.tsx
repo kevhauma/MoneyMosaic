@@ -1,11 +1,8 @@
-'use client'
-import { DataContent } from "@/feature-data-content";
-
+'use client';
+import { DataContent } from '@/feature-data-content';
 
 const AppPage = () => {
-  return (
-      <DataContent/>
-  );
+  return <DataContent />;
 };
 
 export default AppPage;

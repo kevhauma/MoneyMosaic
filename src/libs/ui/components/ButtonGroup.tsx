@@ -18,7 +18,6 @@ export const ButtonGroupButton = styled(Button, {
 })<{ selected: boolean }>`
   flex-grow: 1;
   margin: 0 1px;
-
 `;
 /*
 border:${({ selected, theme }) =>
