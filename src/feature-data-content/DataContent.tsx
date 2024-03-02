@@ -11,14 +11,34 @@ export const DataContent = () => {
   ]);
 
   const onReady = (historyEntries: AccountHistoryEntryType[]) => {
-    console.log(historyEntries);
+    console.log(historyEntries.length);
+    historyEntries.sort((a, b) => (a.date > b.date ? 1 : -1));
+    const startDate = historyEntries[0].date;
+    const endDate = historyEntries[historyEntries.length - 1].date;
+    for (
+      let date = new Date(startDate);
+      endDate.getTime() > date.getTime();
+      date = new Date(date.setDate(date.getDate() + 1))
+    ) {
+      let dateTransactions = historyEntries.filter(
+        ({ date: entryDate }) =>
+          date.getFullYear() == entryDate.getFullYear() &&
+          date.getMonth() == entryDate.getMonth() &&
+          date.getDate() == entryDate.getDate()
+      );
+
+      if (dateTransactions.length == 0)
+        historyEntries.push({ amount: null, date, account: '' });
+    }
+    console.log(historyEntries.length);
+
     setData(historyEntries.sort((a, b) => (a.date > b.date ? 1 : -1)));
   };
 
-  const dates = data.map((entry) => entry.date);
+  const dates = data.map((entry) => entry.date.toDateString());
   const amounts = data.map((entry) => entry.amount);
 
-  console.log(dates, amounts);
+  //console.log(dates, amounts);
 
   const options = {
     title: {
@@ -28,11 +48,11 @@ export const DataContent = () => {
 
     xAxis: {
       type: 'category',
-      boundaryGap: true,
       data: dates,
     },
     yAxis: {
       type: 'value',
+      boundaryGap: true,
     },
     dataZoom: [
       {
@@ -49,8 +69,7 @@ export const DataContent = () => {
       {
         name: 'Fake Data',
         type: 'line',
-        symbol: 'none',
-        sampling: 'lttb',
+        connectNulls: true,
         itemStyle: {
           color: 'rgb(255, 70, 131)',
         },
