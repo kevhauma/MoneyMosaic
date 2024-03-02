@@ -1,19 +1,25 @@
 'use client'
+import { AccountHistoryEntryType } from '@/types';
+import { Flex } from 'antd';
 import ReactECharts from 'echarts-for-react';
-let base = +new Date(1968, 9, 3);
-let oneDay = 24 * 3600 * 1000;
-let date:string[] = [];
-let data = [Math.random() * 300];
-for (let i = 1; i < 20000; i++) {
-  var now = new Date((base += oneDay));
-  date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
-  data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
-}
+import { useState } from 'react';
+import { ReadData } from './ReadData';
 
 export const DataContent = ()=>{
-// Draw the chart
+const [data,setData] = useState<AccountHistoryEntryType[]>([{amount:100,date:new Date(2024,2,2),account:'default'}])
+
+const onReady = (historyEntries: AccountHistoryEntryType[]) => {
+  console.log(historyEntries)
+  setData(historyEntries.sort((a,b)=>a.date > b.date ? 1 : -1))
+}
+
+
+const dates = data.map(entry=>entry.date)
+const amounts = data.map(entry=>entry.amount)
+
+console.log(dates,amounts)
+
 const options = {
-    
     title: {
       left: 'center',
       text: 'Graph'
@@ -21,12 +27,11 @@ const options = {
    
     xAxis: {
       type: 'category',
-      boundaryGap: false,
-      data: date
+      boundaryGap: true,
+      data: dates
     },
     yAxis: {
       type: 'value',
-      boundaryGap: [0, '100%']
     },
     dataZoom: [
       {
@@ -48,12 +53,15 @@ const options = {
         itemStyle: {
           color: 'rgb(255, 70, 131)'
         },
-        data: data
+        data: amounts
       }
     ]
   };
 
 
-return <ReactECharts option={options} />
+return <Flex vertical>
+  <ReadData onReady={onReady} />
+   <ReactECharts option={options} />
+   </Flex>
 
 }

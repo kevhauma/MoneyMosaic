@@ -7,6 +7,7 @@ export const Autocomplete = ({
 }: AntAutocompleteProps) => {
   return (
     <AntAutocomplete
+      style={{ width: 200 }}
       {...props}
     />
   );
