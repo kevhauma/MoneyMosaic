@@ -1,5 +1,7 @@
+import { Dayjs } from 'dayjs';
 export type AccountHistoryEntryType = {
-  date: Date;
-  amount: number | null;
+  date: Dayjs | null;
+  amount: number;
   account: string;
+  recipient: string;
 };

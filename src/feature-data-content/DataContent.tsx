@@ -1,87 +1,147 @@
 'use client';
-import { AccountHistoryEntryType } from '@/types';
+import dayjs from 'dayjs';
 import { Flex } from 'antd';
-import ReactECharts from 'echarts-for-react';
-import { useState } from 'react';
+import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { ReadData } from './ReadData';
-
+import { useHistory } from '@/feature-data-store';
+import { dateToString, stringToDate } from '@/feature-dates';
+import { useMemo, useState } from 'react';
+import { AccountHistoryEntryType } from '@/types';
+const account_start_saldo = {
+  BE55731028883844: 1669.18,
+  BE70746031270525: 6970.55,
+};
+const colors = ['rgb(255, 70, 131)', 'rgb(151, 151,10)', 'rgb(255, 70, 0)'];
+type PreGraphEntryType = { difference: number; date: dayjs.Dayjs };
+type GraphEntryType = [string, number];
 export const DataContent = () => {
-  const [data, setData] = useState<AccountHistoryEntryType[]>([
-    { amount: 100, date: new Date(2024, 2, 2), account: 'default' },
-  ]);
+  const { getHistory, addEntries } = useHistory();
+  const [zoomFilter, setZoomFilter] = useState<{
+    from: dayjs.Dayjs;
+    to: dayjs.Dayjs;
+  } | null>(null);
 
-  const onReady = (historyEntries: AccountHistoryEntryType[]) => {
-    console.log(historyEntries.length);
-    historyEntries.sort((a, b) => (a.date > b.date ? 1 : -1));
-    const startDate = historyEntries[0].date;
-    const endDate = historyEntries[historyEntries.length - 1].date;
+  console.time('getHistory');
+  const historyEntries = getHistory();
+  console.timeEnd('getHistory');
+
+  const series = useMemo(() => {
+    const startDate = historyEntries[0]?.date;
+    const endDate = historyEntries[historyEntries.length - 1]?.date;
+
+    console.time('grouping');
+    const groupedByAccount: Record<string, AccountHistoryEntryType[]> =
+      Object.groupBy(historyEntries, (entry) => entry.account);
+    console.timeEnd('grouping');
+    console.time('blank-filling');
+    const precalcSeries: Record<string, PreGraphEntryType[]> = {};
+
     for (
-      let date = new Date(startDate);
-      endDate.getTime() > date.getTime();
-      date = new Date(date.setDate(date.getDate() + 1))
+      let date = dayjs(startDate);
+      endDate?.isAfter(date);
+      date = date.add(1, 'day')
     ) {
-      let dateTransactions = historyEntries.filter(
-        ({ date: entryDate }) =>
-          date.getFullYear() == entryDate.getFullYear() &&
-          date.getMonth() == entryDate.getMonth() &&
-          date.getDate() == entryDate.getDate()
-      );
-
-      if (dateTransactions.length == 0)
-        historyEntries.push({ amount: null, date, account: '' });
+      Object.entries(groupedByAccount).map(([account, entries]) => {
+        let dateTransactions = entries.filter(
+          ({ date: entryDate, account: entryAccount }) =>
+            date.isSame(entryDate) && account === entryAccount
+        );
+        if (!precalcSeries[account])
+          precalcSeries[account] = [] as PreGraphEntryType[];
+        if (dateTransactions.length == 0)
+          precalcSeries[account].push({ difference: 0, date });
+        else
+          precalcSeries[account].push({
+            difference: dateTransactions.reduce(
+              (total, curr) => total + curr.amount,
+              0
+            ),
+            date,
+          });
+      });
     }
-    console.log(historyEntries.length);
+    console.timeEnd('blank-filling');
+    console.time('lists');
 
-    setData(historyEntries.sort((a, b) => (a.date > b.date ? 1 : -1)));
+    const internalSeries = Object.entries(precalcSeries).map(
+      ([account, entries]) => {
+        const list = entries.reduce(
+          (total, entry) => [
+            ...total,
+            [
+              dateToString(entry.date) || '',
+              parseFloat(
+                (
+                  entry.difference +
+                  (total[total.length - 1]?.[1] || account_start_saldo[account])
+                ).toFixed(2)
+              ),
+            ] as GraphEntryType,
+          ],
+          [] as Array<GraphEntryType>
+        );
+        return { account, list };
+      }
+    );
+    console.timeEnd('lists');
+
+    return internalSeries.toSorted((a, b) => (a.account > b.account ? -1 : 1));
+  }, [historyEntries]);
+
+  const onDataZoom = ({ start, end }: { start: number; end: number }) => {
+    console.log({ start, end });
   };
 
-  const dates = data.map((entry) => entry.date.toDateString());
-  const amounts = data.map((entry) => entry.amount);
-
+  //console.log(series1)
   //console.log(dates, amounts);
 
-  const options = {
+  const options: EChartsOption = {
+    tooltip: {
+      backgroundColor: 'rgba(242, 242, 242, 0.75)',
+      textStyle: {
+        color: '#000000',
+      },
+      trigger: 'axis',
+    },
     title: {
       left: 'center',
       text: 'Graph',
     },
-
     xAxis: {
       type: 'category',
-      data: dates,
+      axisLabel: {
+        formatter: (value: string) => dateToString(stringToDate(value)),
+      },
     },
     yAxis: {
       type: 'value',
-      boundaryGap: true,
     },
     dataZoom: [
-      {
-        type: 'inside',
-        start: 0,
-        end: 10,
-      },
-      {
-        start: 0,
-        end: 10,
-      },
+      { type: 'inside', start: 0, end: 100 },
+      { start: 0, end: 100 },
     ],
-    series: [
-      {
-        name: 'Fake Data',
-        type: 'line',
-        connectNulls: true,
-        itemStyle: {
-          color: 'rgb(255, 70, 131)',
-        },
-        data: amounts,
+    series: series.map(({ account, list }, index) => ({
+      name: account,
+      type: 'line',
+      stack: 'x',
+      stackStrategy: 'all',
+      symbol: 'none',
+      connectNulls: true,
+      markLine: {
+        silent: true,
+        symbol: 'none',
       },
-    ],
+      itemStyle: {
+        color: colors[index % colors.length],
+      },
+      data: list,
+    })),
   };
 
   return (
     <Flex vertical>
-      <ReadData onReady={onReady} />
-      <ReactECharts option={options} />
+      <ReadData onReady={(data) => addEntries(data)} />
+      <ReactECharts option={options} onEvents={{ dataZoom: onDataZoom }} />
     </Flex>
   );
 };

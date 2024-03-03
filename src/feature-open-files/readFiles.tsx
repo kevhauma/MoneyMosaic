@@ -31,7 +31,7 @@ export const OpenFilesButton = ({
 
   return (
     <Button onClick={onClick} {...buttonProps}>
-      {t('form.open')}
+      {t('import')}
     </Button>
   );
 };

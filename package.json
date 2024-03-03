@@ -2,6 +2,9 @@
   "name": "net-worth",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=21.0.0"
+  },
   "scripts": {
     "dev": "cross-env NEXT_PUBLIC_VERSION=$npm_package_version next dev",
     "start": "cross-env NEXT_PUBLIC_VERSION=$npm_package_version next dev",
@@ -31,7 +34,7 @@
     "@monaco-editor/react": "^4.6.0",
     "antd": "^5.14.2",
     "cross-env": "^7.0.3",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.0.3",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",

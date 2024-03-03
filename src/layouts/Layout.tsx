@@ -1,11 +1,12 @@
 'use client';
 import '@/feature-i18n';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { theme } from '@/libs/ui';
 import { RecoilRoot } from 'recoil';
 import styled from '@emotion/styled';
 import { ConfigProvider, Flex } from 'antd';
-import { redirect } from 'next/navigation';
+
+import '@/feature-dates';
 
 const PageWrapper = styled(Flex)`
   height: 100vh;
