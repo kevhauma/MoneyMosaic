@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://gitlab.brc.io/arcom/arcom-studio/-/compare/v0.1.1...v0.1.2?from_project_id=208) (2024-03-03)
+
+### Bug Fixes
+
+- buttons to link pages ([5da20dc](https://gitlab.brc.io/arcom/arcom-studio/-/commit/5da20dc6c908d0426fc6e713252bca27168fab13))
+
 ### 0.1.1 (2024-03-03)
 
 ### Features
