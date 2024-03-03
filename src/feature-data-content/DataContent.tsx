@@ -1,6 +1,6 @@
 'use client';
 import dayjs from 'dayjs';
-import { Flex } from 'antd';
+import { Button, Flex } from 'antd';
 import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { ReadData } from './ReadData';
 import { useHistory } from '@/feature-data-store';
@@ -8,14 +8,16 @@ import { dateToString, stringToDate } from '@/feature-dates';
 import { useMemo, useState } from 'react';
 import { AccountHistoryEntryType } from '@/types';
 const account_start_saldo = {
-  BE55731028883844: 1669.18,
-  BE70746031270525: 6970.55,
+  BE55731028883844: 0, //1669.18,
+  BE70746031270525: 0, //6970.55,
 };
-const colors = ['rgb(255, 70, 131)', 'rgb(151, 151,10)', 'rgb(255, 70, 0)'];
+
+const colors = ['#FF4683', '#F0B67F', '#D6D1B1', '#C7EFCF', '#EEF5DB'];
 type PreGraphEntryType = { difference: number; date: dayjs.Dayjs };
 type GraphEntryType = [string, number];
 export const DataContent = () => {
   const { getHistory, addEntries } = useHistory();
+  const [accountFilter, setAccountFilter] = useState<Array<string>>([]);
   const [zoomFilter, setZoomFilter] = useState<{
     from: dayjs.Dayjs;
     to: dayjs.Dayjs;
@@ -24,13 +26,23 @@ export const DataContent = () => {
   console.time('getHistory');
   const historyEntries = getHistory();
   console.timeEnd('getHistory');
-
+  console.log('history entries: ', historyEntries.length);
+  const toggleAccountFilter = (account: string) => {
+    if (accountFilter.includes(account)) {
+      setAccountFilter((prevFilter) =>
+        prevFilter.filter((acc) => acc !== account)
+      );
+    } else {
+      setAccountFilter((prevFilter) => [...prevFilter, account]);
+    }
+  };
   const series = useMemo(() => {
     const startDate = historyEntries[0]?.date;
     const endDate = historyEntries[historyEntries.length - 1]?.date;
 
     console.time('grouping');
     const groupedByAccount: Record<string, AccountHistoryEntryType[]> =
+      //@ts-ignore
       Object.groupBy(historyEntries, (entry) => entry.account);
     console.timeEnd('grouping');
     console.time('blank-filling');
@@ -73,7 +85,11 @@ export const DataContent = () => {
               parseFloat(
                 (
                   entry.difference +
-                  (total[total.length - 1]?.[1] || account_start_saldo[account])
+                  (total[total.length - 1]?.[1] ||
+                    account_start_saldo[
+                      account as keyof typeof account_start_saldo
+                    ] ||
+                    0)
                 ).toFixed(2)
               ),
             ] as GraphEntryType,
@@ -89,11 +105,8 @@ export const DataContent = () => {
   }, [historyEntries]);
 
   const onDataZoom = ({ start, end }: { start: number; end: number }) => {
-    console.log({ start, end });
+    //  console.log({ start, end });
   };
-
-  //console.log(series1)
-  //console.log(dates, amounts);
 
   const options: EChartsOption = {
     tooltip: {
@@ -120,28 +133,53 @@ export const DataContent = () => {
       { type: 'inside', start: 0, end: 100 },
       { start: 0, end: 100 },
     ],
-    series: series.map(({ account, list }, index) => ({
-      name: account,
-      type: 'line',
-      stack: 'x',
-      stackStrategy: 'all',
-      symbol: 'none',
-      connectNulls: true,
-      markLine: {
-        silent: true,
+    series: series
+      .filter(({ account }) =>
+        accountFilter.length ? accountFilter.includes(account) : true
+      )
+      .map(({ account, list }, index) => ({
+        name: account,
+        type: 'line',
+        stack: 'x',
+        stackStrategy: 'all',
         symbol: 'none',
-      },
-      itemStyle: {
-        color: colors[index % colors.length],
-      },
-      data: list,
-    })),
+        connectNulls: true,
+        markLine: {
+          silent: true,
+          symbol: 'none',
+        },
+        itemStyle: {
+          color: colors[index % colors.length],
+        },
+        data: list,
+      })),
   };
-
+  console.log(options.series);
   return (
     <Flex vertical>
       <ReadData onReady={(data) => addEntries(data)} />
-      <ReactECharts option={options} onEvents={{ dataZoom: onDataZoom }} />
+      <Flex>
+        {series.map(({ account }) => (
+          <Button
+            key={account}
+            type={
+              !accountFilter.length
+                ? 'primary'
+                : accountFilter.includes(account)
+                ? 'primary'
+                : undefined
+            }
+            onClick={() => toggleAccountFilter(account)}
+          >
+            {account}
+          </Button>
+        ))}
+      </Flex>
+      <ReactECharts
+        lazyUpdate={true}
+        option={options}
+        onEvents={{ dataZoom: onDataZoom }}
+      />
     </Flex>
   );
 };
