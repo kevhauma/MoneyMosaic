@@ -1,8 +1,8 @@
 import { Layout } from '@/layouts';
 
 export const metadata = {
-  title: 'Net Worth',
-  description: 'Graphs of your net worth',
+  title: 'Money Mosaic',
+  description: 'A mosaic of graphs for your bank transaction data',
 };
 type Props = {
   children: React.ReactNode;

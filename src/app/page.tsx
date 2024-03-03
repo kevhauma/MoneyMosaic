@@ -1,12 +1,14 @@
 'use client';
 import { CenteredCircularProgress } from '@/libs/ui';
-import { redirect } from 'next/navigation';
-import { useEffect } from 'react';
+import Link from 'next/link';
 
 const Home = () => {
-  useEffect(() => redirect('/start'), []);
+  //useEffect(() => redirect('/start'), []);
   return (
     <>
+      <Link replace href="/start">
+        Start
+      </Link>
       <CenteredCircularProgress />
     </>
   );
