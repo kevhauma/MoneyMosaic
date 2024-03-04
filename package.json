@@ -14,10 +14,10 @@
     "test:ci": "jest --ci",
     "prepare": "husky install",
     "depcruise": "depcruise src -c .config/.dependency-cruiser.js",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "release": "standard-version && firebase deploy",
+    "release:minor": "standard-version --release-as minor && firebase deploy",
+    "release:patch": "standard-version --release-as patch && firebase deploy",
+    "release:major": "standard-version --release-as major && firebase deploy"
   },
   "lint-staged": {
     "*.{js,css,scss,ts,tsx,html,graphql}": [
