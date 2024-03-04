@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://gitlab.brc.io/arcom/arcom-studio/-/compare/v0.1.2...v0.1.3?from_project_id=208) (2024-03-04)
+
+### Bug Fixes
+
+- firebase redirect to index.html ([0c5654d](https://gitlab.brc.io/arcom/arcom-studio/-/commit/0c5654dd8f32bb35a69910a3b4388341f6cc9501))
+
 ### [0.1.2](https://gitlab.brc.io/arcom/arcom-studio/-/compare/v0.1.1...v0.1.2?from_project_id=208) (2024-03-03)
 
 ### Bug Fixes
