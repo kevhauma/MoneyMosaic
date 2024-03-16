@@ -1,5 +1,5 @@
 'use client';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Button, Flex } from 'antd';
 import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { ReadData } from './ReadData';
@@ -44,6 +44,12 @@ export const DataContent = () => {
     const groupedByAccount: Record<string, AccountHistoryEntryType[]> =
       //@ts-ignore
       Object.groupBy(historyEntries, (entry) => entry.account);
+    const groupedByDate: Record<string, AccountHistoryEntryType[]> =
+      //@ts-ignore
+      Object.groupBy(historyEntries, (entry) =>
+        dateToString(entry.date as Dayjs)
+      );
+
     console.timeEnd('grouping');
     console.time('blank-filling');
     const precalcSeries: Record<string, PreGraphEntryType[]> = {};
@@ -53,14 +59,13 @@ export const DataContent = () => {
       endDate?.isAfter(date);
       date = date.add(1, 'day')
     ) {
-      Object.entries(groupedByAccount).map(([account, entries]) => {
-        let dateTransactions = entries.filter(
-          ({ date: entryDate, account: entryAccount }) =>
-            date.isSame(entryDate) && account === entryAccount
+      Object.keys(groupedByAccount).map((account) => {
+        let dateTransactions = groupedByDate[dateToString(date)!]?.filter(
+          ({ account: entryAccount }) => account === entryAccount
         );
         if (!precalcSeries[account])
           precalcSeries[account] = [] as PreGraphEntryType[];
-        if (dateTransactions.length == 0)
+        if (!dateTransactions?.length)
           precalcSeries[account].push({ difference: 0, date });
         else
           precalcSeries[account].push({
@@ -154,7 +159,7 @@ export const DataContent = () => {
         data: list,
       })),
   };
-  console.log(options.series);
+
   return (
     <Flex vertical>
       <ReadData onReady={(data) => addEntries(data)} />
