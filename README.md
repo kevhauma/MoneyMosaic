@@ -1,5 +1,7 @@
 ## Project Info
 
+[![wakatime](https://wakatime.com/badge/user/4b06a6a1-8969-489e-9507-811aa31bac88/project/018e09f6-7621-4945-ac9c-7d2740281b85.svg)](https://wakatime.com/badge/user/4b06a6a1-8969-489e-9507-811aa31bac88/project/018e09f6-7621-4945-ac9c-7d2740281b85)
+
 ### Major frameworks and libraries
 
 - NextJS (app dir)
