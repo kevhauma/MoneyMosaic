@@ -1,4 +1,5 @@
-import { Button, ButtonProps } from 'antd';
+
+import { Button, ButtonProps } from '@/libs/shadCn';
 import { useTranslation } from 'react-i18next';
 
 type Props = ButtonProps & {

@@ -1,5 +1,5 @@
 'use client';
-import { CenteredCircularProgress } from '@/libs/ui';
+
 import Link from 'next/link';
 
 const Home = () => {
@@ -9,7 +9,6 @@ const Home = () => {
       <Link replace href="/start">
         Start
       </Link>
-      <CenteredCircularProgress />
     </>
   );
 };

@@ -1,12 +1,12 @@
 'use client';
-import dayjs, { Dayjs } from 'dayjs';
-import { Button, Flex } from 'antd';
-import ReactECharts, { EChartsOption } from 'echarts-for-react';
-import { ReadData } from './ReadData';
 import { useHistory } from '@/feature-data-store';
 import { dateToString, stringToDate } from '@/feature-dates';
-import { useMemo, useState } from 'react';
+import { Button, Card, Flex } from '@/libs/shadCn';
 import { AccountHistoryEntryType } from '@/types';
+import dayjs, { Dayjs } from 'dayjs';
+import ReactECharts, { EChartsOption } from 'echarts-for-react';
+import { useMemo, useState } from 'react';
+import { ReadDataDialog } from './ReadDataDialog';
 const account_start_saldo = {
   BE55731028883844: 0, //1669.18,
   BE70746031270525: 0, //6970.55,
@@ -115,9 +115,9 @@ export const DataContent = () => {
 
   const options: EChartsOption = {
     tooltip: {
-      backgroundColor: 'rgba(242, 242, 242, 0.75)',
+      backgroundColor: 'var(--tw-bg-opacity)',
       textStyle: {
-        color: '#000000',
+        color: '#fff',
       },
       trigger: 'axis',
     },
@@ -161,18 +161,16 @@ export const DataContent = () => {
   };
 
   return (
-    <Flex vertical>
-      <ReadData onReady={(data) => addEntries(data)} />
+    <Flex vertical className='border'>
+      <ReadDataDialog onReady={(data) => addEntries(data)} />
       <Flex>
         {series.map(({ account }) => (
           <Button
             key={account}
-            type={
-              !accountFilter.length
-                ? 'primary'
-                : accountFilter.includes(account)
-                ? 'primary'
-                : undefined
+            variant={
+              !accountFilter.length || accountFilter.includes(account)
+                ? undefined
+                : 'secondary'
             }
             onClick={() => toggleAccountFilter(account)}
           >
@@ -180,11 +178,13 @@ export const DataContent = () => {
           </Button>
         ))}
       </Flex>
+      <Card>
       <ReactECharts
         lazyUpdate={true}
         option={options}
         onEvents={{ dataZoom: onDataZoom }}
       />
+      </Card>
     </Flex>
   );
 };

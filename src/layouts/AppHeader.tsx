@@ -1,7 +1,8 @@
-import { Flex, Typography } from 'antd';
-const { Text } = Typography;
+import { Flex } from "@/libs/shadCn";
+
+
 export const AppHeader = () => (
   <Flex>
-    <Text>MoneyMosaic</Text>
+    <span>MoneyMosaic</span>
   </Flex>
 );

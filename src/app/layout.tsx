@@ -1,4 +1,5 @@
 import { Layout } from '@/layouts';
+import "./globals.css";
 
 export const metadata = {
   title: 'Money Mosaic',

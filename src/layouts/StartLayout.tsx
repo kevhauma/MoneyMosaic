@@ -1,25 +1,15 @@
 'use client';
-import { Layout } from 'antd';
+import { Flex } from '@/libs/shadCn';
 import { PropsWithChildren } from 'react';
 import { AppHeader } from './AppHeader';
-const { Header, Content } = Layout;
 
 export const StartLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Layout>
-      <Header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+    <Flex vertical className='h-screen w-screen'>
+      <div className="bg-slate-950 sticky z-10 top-0 w-full flex align-middle">
         <AppHeader></AppHeader>
-      </Header>
-      <Content>{children}</Content>
-    </Layout>
+      </div>
+      <div className='flex-grow'>{children}</div>
+    </Flex>
   );
 };

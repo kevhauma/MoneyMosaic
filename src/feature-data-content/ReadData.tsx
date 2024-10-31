@@ -1,17 +1,13 @@
 import {
-  dateFormats,
-  dateToString,
   DATE_FORMAT,
-  stringToDate,
+  dateFormats, stringToDate
 } from '@/feature-dates';
 import { OpenFilesButton } from '@/feature-open-files';
-import { Autocomplete, TextField } from '@/libs/ui';
+import { Dialog, DialogContent, DialogTrigger } from '@/libs/shadCn';
 import { csvToArray } from '@/libs/utils';
 import { AccountHistoryEntryType } from '@/types';
-import { Flex, Modal, Switch, Typography } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-const { Text } = Typography;
 
 type Props = {
   onReady: (p1: AccountHistoryEntryType[]) => void;
@@ -83,16 +79,12 @@ export const ReadData = ({ onReady }: Props) => {
   const randomSamples = csvData.slice(0, 10);
 
   return (
-    <>
-      <OpenFilesButton fileTypes={['csv']} onOpen={onDataRead} />
-      <Modal
-        width={'auto'}
-        title="CSV import setting"
-        open={isModalOpen}
-        onOk={convertData}
-        onCancel={() => setIsModalOpen(false)}
-      >
-        <Flex vertical>
+    <Dialog>
+      <DialogTrigger>
+        <OpenFilesButton fileTypes={['csv']} onOpen={onDataRead} />
+      </DialogTrigger>
+      <DialogContent>
+        {/* <Flex vertical>
           <Flex vertical>
             <Text> seperate debet field</Text>
             <Switch
@@ -220,9 +212,9 @@ export const ReadData = ({ onReady }: Props) => {
               ))}
             </Flex>
           </Flex>
-        </Flex>
-      </Modal>
-    </>
+        </Flex> */}
+      </DialogContent>
+    </Dialog>
   );
 };
 
