@@ -6,13 +6,7 @@ import {
   CardHeader,
   CardTitle,
   Flex,
-  Input,
   ScrollArea,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   SimpleSelect,
   Table,
   TableBody,
@@ -27,6 +21,10 @@ import { Select } from '@radix-ui/react-select';
 import { useState } from 'react';
 import { UseStateReturnType } from '@/types';
 import { DATE_FORMAT, stringToDate } from '@/feature-dates';
+import {
+  PreviewTable,
+  TableConfig,
+} from '@/libs/shadCn/components/custom/Table/PreviewTable';
 
 type Props = {
   legendValue: Array<string>;
@@ -53,7 +51,21 @@ export const DateFieldStep = ({
     setDateField(localDateField);
     setDateFormat(localDateFormat);
   };
-
+  const previewConfig: TableConfig<CsvData> = [
+    { field: localDateField, headerName: 'Csv Date Data' },
+    {
+      field: localDateField,
+      headerName: 'Parsed Date Data',
+      width: 300,
+      render: (row) => (
+        <>
+          {stringToDate(row[localDateField], localDateFormat)
+            ?.toDate()
+            .toLocaleString() || '-'}
+        </>
+      ),
+    },
+  ];
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -77,39 +89,7 @@ export const DateFieldStep = ({
         {(csvData.length || undefined) && (
           <>
             preview:
-            <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Csv Date Data</TableHead>
-                    <TableHead className="w-[100px]">
-                      Parsed Date Data
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {csvData.slice(0, 10).map((csvObject, i) => (
-                    <TableRow key={`table-row-${i}`}>
-                      <TableCell className="w-[100px]">
-                        <ScrollArea className="h-[25px] w-[100px]">
-                          {csvObject[localDateField] || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                      <TableCell className="w-[200px]">
-                        <ScrollArea className="h-[25px] w-[200px]">
-                          {stringToDate(
-                            csvObject[localDateField],
-                            localDateFormat
-                          )
-                            ?.toDate()
-                            .toLocaleString() || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
+            <PreviewTable columns={previewConfig} rows={csvData.slice(0, 20)} />
           </>
         )}
       </CardContent>

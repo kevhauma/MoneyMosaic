@@ -15,7 +15,6 @@ type TableConfigEntry<T> = {
   width?: number;
   render?: (p1: T) => JSX.Element;
 };
-
 export type TableConfig<T extends object> = Array<TableConfigEntry<T>>;
 
 type PreviewTableProps<T extends object> = {

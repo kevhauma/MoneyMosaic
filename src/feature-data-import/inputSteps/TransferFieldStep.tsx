@@ -6,13 +6,7 @@ import {
   CardHeader,
   CardTitle,
   Flex,
-  Input,
   ScrollArea,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   SimpleSelect,
   Table,
   TableBody,
@@ -21,11 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/libs/shadCn';
-
 import { CsvData } from '@/libs/utils';
-import { Select } from '@radix-ui/react-select';
 import { useState } from 'react';
 import { UseStateReturnType } from '@/types';
+import {
+  PreviewTable,
+  TableConfig,
+} from '@/libs/shadCn/components/custom/Table/PreviewTable';
 
 type Props = {
   legendValue: Array<string>;
@@ -67,6 +63,26 @@ export const TransferFieldStep = ({
   const [localDescriptionField, setLocalDescriptionField] = useState(
     descriptionField || 'Vrije mededeling'
   );
+
+  const previewConfig: TableConfig<CsvData> = [
+    { field: localAccountField, headerName: 'Account' },
+    {
+      field: localAccountName,
+      headerName: 'Account Name',
+    },
+    {
+      field: localRecipientField,
+      headerName: 'Recipient Account',
+    },
+    {
+      field: localRecipientName,
+      headerName: 'Recipient Name',
+    },
+    {
+      field: localDescriptionField,
+      headerName: 'Description',
+    },
+  ];
 
   const onOk = () => {
     setAccountField(localAccountField);
@@ -121,37 +137,7 @@ export const TransferFieldStep = ({
         {(csvData.length || undefined) && (
           <>
             preview:
-            <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Account</TableHead>
-                    <TableHead className="w-[100px]">Account Name</TableHead>
-                    <TableHead className="w-[100px]">
-                      Recipient Account
-                    </TableHead>
-                    <TableHead className="w-[100px]">Recipient Name</TableHead>
-                    <TableHead className="flex-grow">Description</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {csvData.slice(0, 10).map((csvObject, i) => (
-                    <TableRow key={`table-row-${i}`}>
-                      <TableCell className="w-[100px]">
-                        <ScrollArea className="h-[25px] w-[100px]">
-                          {csvObject[localAccountField] || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                      <TableCell className="w-[200px]">
-                        <ScrollArea className="h-[25px] w-[200px]">
-                          {csvObject[localRecipientField] || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
+            <PreviewTable rows={csvData.slice(0, 20)} columns={previewConfig} />
           </>
         )}
       </CardContent>

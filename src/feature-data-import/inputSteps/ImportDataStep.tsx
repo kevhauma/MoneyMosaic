@@ -9,14 +9,11 @@ import {
   Checkbox,
   Flex,
   Input,
-  ScrollArea,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from '@/libs/shadCn';
+import {
+  PreviewTable,
+  TableConfig,
+} from '@/libs/shadCn/components/custom/Table/PreviewTable';
 import { CsvData, csvToArray } from '@/libs/utils';
 import { useEffect, useState } from 'react';
 
@@ -69,6 +66,10 @@ export const ImportDataStep = ({
     onCsvChange(localCsvObjects);
   };
 
+  const previewConfig: TableConfig<CsvData> = localLegend?.map((legend) => ({
+    field: legend,
+  }));
+
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -116,38 +117,10 @@ export const ImportDataStep = ({
         {(localCsvObjects.length || undefined) && (
           <>
             preview:
-            <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    {localLegend.map((legend) => (
-                      <TableHead
-                        key={`table-header-${legend}`}
-                        className="w-[100px]"
-                      >
-                        {legend}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {localCsvObjects.slice(0, 10).map((csvObject, i) => (
-                    <TableRow key={`table-row-${i}`}>
-                      {localLegend.map((legend) => (
-                        <TableCell
-                          key={`table-cell-${i}-${legend}`}
-                          className="w-[100px]"
-                        >
-                          <ScrollArea className="h-[25px] w-[100px]">
-                            {csvObject[legend] || '-'}
-                          </ScrollArea>
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
+            <PreviewTable
+              columns={previewConfig}
+              rows={localCsvObjects.slice(0, 20)}
+            />
           </>
         )}
       </CardContent>
