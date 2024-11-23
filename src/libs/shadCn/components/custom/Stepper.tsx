@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { PropsWithChildren } from 'react';
 import { Flex } from './Flex';
-import { Button } from '.';
+import { Button } from '..';
 import { CheckIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 type StepperProps = {

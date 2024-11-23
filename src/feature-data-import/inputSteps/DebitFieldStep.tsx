@@ -6,13 +6,7 @@ import {
   CardHeader,
   CardTitle,
   Flex,
-  Input,
   ScrollArea,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   SimpleSelect,
   Switch,
   Table,
@@ -28,10 +22,13 @@ import {
 } from '@/libs/shadCn';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { CsvData, stringToFloat } from '@/libs/utils';
-import { Select } from '@radix-ui/react-select';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UseStateReturnType } from '@/types';
-import { SimpleInput } from '@/libs/shadCn/components/SimpleInput';
+import { SimpleInput } from '@/libs/shadCn/components/custom/SimpleInput';
+import {
+  PreviewTable,
+  TableConfig,
+} from '@/libs/shadCn/components/custom/Table/PreviewTable';
 
 type Props = {
   legendValue: Array<string>;
@@ -67,6 +64,29 @@ export const DebitFieldStep = ({
     debitSeperator || ','
   );
 
+  const previewConfig: TableConfig<CsvData> = [
+    { field: localAmountField, headerName: 'CSV amount Data' },
+    {
+      field: localAmountField,
+      headerName: 'parsed amount Data',
+      render: (row) => (
+        <>{stringToFloat(row[localAmountField], localAmountSeperator) || '-'}</>
+      ),
+    },
+  ];
+  if (isSeperateDebitField) {
+    previewConfig.push({
+      field: localDebitField,
+      headerName: 'CSV debit Data',
+    });
+    previewConfig.push({
+      field: localDebitField,
+      headerName: 'parsed debit Data',
+      render: (row) => (
+        <>{stringToFloat(row[localDebitField], localAmountSeperator) || '-'}</>
+      ),
+    });
+  }
   const onOk = () => {
     setAmountField(localAmountField);
     setDebitField(localDebitField);
@@ -115,7 +135,6 @@ export const DebitFieldStep = ({
             </>
           )}
         </Flex>
-
         {(csvData.length || undefined) && (
           <>
             <Flex className="gap-2 hover:cursor-help">
@@ -134,64 +153,7 @@ export const DebitFieldStep = ({
               </TooltipProvider>
               preview:
             </Flex>
-            <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Csv Debit Data</TableHead>
-                    <TableHead className="w-[100px]">
-                      Parsed Debit Data
-                    </TableHead>
-                    {isSeperateDebitField && (
-                      <>
-                        <TableHead className="w-[100px]">
-                          Csv Debit Data
-                        </TableHead>
-                        <TableHead className="w-[100px]">
-                          Parsed Debit Data
-                        </TableHead>
-                      </>
-                    )}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {csvData.slice(0, 10).map((csvObject, i) => (
-                    <TableRow key={`table-row-${i}`}>
-                      <TableCell className="w-[100px]">
-                        <ScrollArea className="h-[25px] w-[100px]">
-                          {csvObject[localAmountField] || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                      <TableCell className="w-[100px]">
-                        <ScrollArea className="h-[25px] w-[100px]">
-                          {stringToFloat(
-                            csvObject[localAmountField],
-                            localAmountSeperator
-                          ) || '-'}
-                        </ScrollArea>
-                      </TableCell>
-                      {isSeperateDebitField && (
-                        <>
-                          <TableCell className="w-[100px]">
-                            <ScrollArea className="h-[25px] w-[100px]">
-                              {csvObject[localDebitField] || '-'}
-                            </ScrollArea>
-                          </TableCell>
-                          <TableCell className="w-[100px]">
-                            <ScrollArea className="h-[25px] w-[100px]">
-                              {stringToFloat(
-                                csvObject[localDebitField],
-                                localDebitSeperator
-                              ) || '-'}
-                            </ScrollArea>
-                          </TableCell>
-                        </>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </ScrollArea>
+            <PreviewTable rows={csvData.slice(0, 10)} columns={previewConfig} />
           </>
         )}
       </CardContent>

@@ -62,7 +62,7 @@ export const DataContent = () => {
     ) {
       Object.keys(groupedByAccount).map((account) => {
         let dateTransactions = groupedByDate[dateToString(date)!]?.filter(
-          ({ account: entryAccount }) => account === entryAccount
+          ({ account: entryAccount }) => account === entryAccount.identifier
         );
         if (!precalcSeries[account])
           precalcSeries[account] = [] as PreGraphEntryType[];
@@ -162,11 +162,9 @@ export const DataContent = () => {
   };
 
   return (
-    <Flex vertical className='border'>
-       <Link replace href="/import">
-        <Button>
-        Import New Data
-        </Button>
+    <Flex vertical className="border">
+      <Link replace href="/import">
+        <Button>Import New Data</Button>
       </Link>
       <Flex>
         {series.map(({ account }) => (
@@ -184,11 +182,11 @@ export const DataContent = () => {
         ))}
       </Flex>
       <Card>
-      <ReactECharts
-        lazyUpdate={true}
-        option={options}
-        onEvents={{ dataZoom: onDataZoom }}
-      />
+        <ReactECharts
+          lazyUpdate={true}
+          option={options}
+          onEvents={{ dataZoom: onDataZoom }}
+        />
       </Card>
     </Flex>
   );

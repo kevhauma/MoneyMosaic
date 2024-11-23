@@ -6,15 +6,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui';
+} from '../ui';
 
-type Props = {
+export type SimpleSelectProps = {
   label?: string;
   value?: string;
   onChange: (p1: string) => void;
   options: Array<string> | Array<{ key: string; label: string }>;
 };
-export const SimpleSelect = ({ label, value, onChange, options }: Props) => {
+export const SimpleSelect = ({
+  label,
+  value,
+  onChange,
+  options,
+}: SimpleSelectProps) => {
   return (
     <Flex vertical>
       {label}

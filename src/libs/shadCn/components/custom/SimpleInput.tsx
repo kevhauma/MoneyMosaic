@@ -1,13 +1,13 @@
 import { Flex } from './Flex';
-import { Input } from './ui';
+import { Input } from '../ui';
 
-type Props = {
+export type SimpleInputProps = {
   label?: string;
   value?: string;
   onChange: (p1: string) => void;
 };
 
-export const SimpleInput = ({ label, value, onChange }: Props) => {
+export const SimpleInput = ({ label, value, onChange }: SimpleInputProps) => {
   return (
     <Flex vertical>
       {label}
