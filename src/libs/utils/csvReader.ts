@@ -2,8 +2,10 @@ type CsvReaderOptions = {
   header?: boolean;
   delimiter?: string;
 };
+export type CsvData = { [k: string]: string };
+
 export const csvToArray = (csvString: string, options?: CsvReaderOptions) => {
-  const hasHeader = options?.header || true;
+  const hasHeader = options?.header ?? true;
   const delimiter = options?.delimiter || ',';
 
   const lines = csvString.split(/\r|\n/);

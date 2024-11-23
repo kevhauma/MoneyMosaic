@@ -6,7 +6,8 @@ import { AccountHistoryEntryType } from '@/types';
 import dayjs, { Dayjs } from 'dayjs';
 import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { useMemo, useState } from 'react';
-import { ReadDataDialog } from './ReadDataDialog';
+
+import Link from 'next/link';
 const account_start_saldo = {
   BE55731028883844: 0, //1669.18,
   BE70746031270525: 0, //6970.55,
@@ -16,7 +17,7 @@ const colors = ['#FF4683', '#F0B67F', '#D6D1B1', '#C7EFCF', '#EEF5DB'];
 type PreGraphEntryType = { difference: number; date: dayjs.Dayjs };
 type GraphEntryType = [string, number];
 export const DataContent = () => {
-  const { getHistory, addEntries } = useHistory();
+  const { getHistory } = useHistory();
   const [accountFilter, setAccountFilter] = useState<Array<string>>([]);
   const [zoomFilter, setZoomFilter] = useState<{
     from: dayjs.Dayjs;
@@ -162,7 +163,11 @@ export const DataContent = () => {
 
   return (
     <Flex vertical className='border'>
-      <ReadDataDialog onReady={(data) => addEntries(data)} />
+       <Link replace href="/import">
+        <Button>
+        Import New Data
+        </Button>
+      </Link>
       <Flex>
         {series.map(({ account }) => (
           <Button

@@ -1,11 +1,8 @@
-import Link from 'next/link';
+'use client';
+import { DataContent } from '@/feature-data-content';
 
 const StartPage = () => {
-  return (
-    <Link replace href="/data">
-      data
-    </Link>
-  );
+  return <DataContent />;
 };
 
 export default StartPage;
