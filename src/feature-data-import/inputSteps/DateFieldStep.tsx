@@ -13,6 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SimpleSelect,
   Table,
   TableBody,
   TableCell,
@@ -60,36 +61,18 @@ export const DateFieldStep = ({
       </CardHeader>
       <CardContent className="flex-grow">
         <Flex className="gap-4 py-2">
-          <Flex vertical>
-            Date Field
-            <Select value={localDateField} onValueChange={setLocalDateField}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {legendValue.map((legend) => (
-                    <SelectItem value={legend}>{legend}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Flex>
-          <Flex vertical>
-            Date Format
-            <Select value={localDateFormat} onValueChange={setLocalDateFormat}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {Object.values(DATE_FORMAT).map((legend) => (
-                    <SelectItem value={legend}>{legend}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Flex>
+          <SimpleSelect
+            label="Date Field"
+            value={localDateField}
+            onChange={setLocalDateField}
+            options={legendValue}
+          />
+          <SimpleSelect
+            label="Date Format"
+            value={localDateFormat}
+            onChange={setLocalDateFormat}
+            options={Object.values(DATE_FORMAT)}
+          />
         </Flex>
         {(csvData.length || undefined) && (
           <>

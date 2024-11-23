@@ -13,6 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SimpleSelect,
   Switch,
   Table,
   TableBody,
@@ -30,6 +31,7 @@ import { CsvData, stringToFloat } from '@/libs/utils';
 import { Select } from '@radix-ui/react-select';
 import { useEffect, useState } from 'react';
 import { UseStateReturnType } from '@/types';
+import { SimpleInput } from '@/libs/shadCn/components/SimpleInput';
 
 type Props = {
   legendValue: Array<string>;
@@ -79,31 +81,17 @@ export const DebitFieldStep = ({
       </CardHeader>
       <CardContent className="flex-grow">
         <Flex className="gap-4 py-2">
-          <Flex vertical>
-            Debit Field
-            <Select
-              value={localAmountField}
-              onValueChange={setLocalAmountField}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {legendValue.map((legend) => (
-                    <SelectItem value={legend}>{legend}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Flex>
-          <Flex vertical>
-            Decimal Seperator
-            <Input
-              value={localAmountSeperator}
-              onChange={(e) => setLocalAmountSeperator(e.currentTarget.value)}
-            />
-          </Flex>
+          <SimpleSelect
+            label="Amount Field"
+            value={localAmountField}
+            onChange={setLocalAmountField}
+            options={legendValue}
+          />
+          <SimpleInput
+            label="Amount Seperator"
+            value={localAmountSeperator}
+            onChange={setLocalAmountSeperator}
+          />
           <Flex vertical>
             Enable Debit field
             <Switch
@@ -113,33 +101,17 @@ export const DebitFieldStep = ({
           </Flex>
           {isSeperateDebitField && (
             <>
-              <Flex vertical>
-                Debit Field
-                <Select
-                  value={localDebitField}
-                  onValueChange={setLocalDebitField}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {legendValue.map((legend) => (
-                        <SelectItem value={legend}>{legend}</SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </Flex>
-              <Flex vertical>
-                Decimal Seperator
-                <Input
-                  value={localAmountSeperator}
-                  onChange={(e) =>
-                    setLocalDebitSeperator(e.currentTarget.value)
-                  }
-                />
-              </Flex>
+              <SimpleSelect
+                label="Debit Field"
+                value={localDebitField}
+                onChange={setLocalDebitField}
+                options={legendValue}
+              />
+              <SimpleInput
+                label="Decimal Seperator"
+                value={localDebitSeperator}
+                onChange={setLocalDebitSeperator}
+              />
             </>
           )}
         </Flex>
