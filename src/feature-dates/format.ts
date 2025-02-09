@@ -28,7 +28,7 @@ export const dateToString = (
   dayJsDate?: dayjs.Dayjs | null,
   stringFormat?: string
 ) => {
-  const dateString = dayJsDate?.format(
+  const dateString = (dayJsDate || dayjs()).format(
     stringFormat || DATE_FORMAT.fullYear_month_day_dashes
   );
   return dateString;

@@ -8,9 +8,11 @@ import { DebitFieldStep } from './inputSteps/DebitFieldStep';
 import { DateFieldStep } from './inputSteps/DateFieldStep';
 import { stringToFloat } from '@/libs/utils';
 import { TransferFieldStep } from './inputSteps/TransferFieldStep';
+import { useAccounts } from '@/feature-data-store/useAccounts';
 
 export const NewReadData = () => {
   const { addEntries } = useHistory();
+  const { setSetting } = useAccounts();
 
   const [csvData, setCsvData] = useState<Array<{ [k: string]: string }>>([]);
 
@@ -68,6 +70,15 @@ export const NewReadData = () => {
       recipient: { identifier: obj[recipientField], name: obj[recipientName] },
       description: obj[descriptionField],
     }));
+
+    const accounts = entries.reduce((uniqueAccounts,entry)=>{
+      uniqueAccounts[entry.account.identifier] = entry.account.name
+
+      return uniqueAccounts
+    },{} as Record<string,string>)
+
+    Object.entries(accounts)
+    .forEach(([key,name])=>setSetting(key,{name}))
 
     addEntries(entries);
   };
@@ -130,3 +141,4 @@ export const NewReadData = () => {
     </div>
   );
 };
+

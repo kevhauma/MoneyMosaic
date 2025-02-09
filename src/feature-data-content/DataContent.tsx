@@ -8,8 +8,10 @@ import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { useMemo, useState } from 'react';
 
 import Link from 'next/link';
+import { useAccounts } from '@/feature-data-store/useAccounts';
+import { AccountSettings } from '@/feature-account-settings';
 const account_start_saldo = {
-  BE55731028883844: 0, //1669.18,
+  BE55731028883844: 718.16, //1669.18,
   BE70746031270525: 0, //6970.55,
 };
 
@@ -18,6 +20,8 @@ type PreGraphEntryType = { difference: number; date: dayjs.Dayjs };
 type GraphEntryType = [string, number];
 export const DataContent = () => {
   const { getHistory } = useHistory();
+  const { getAccounts } = useAccounts();
+  const accountSettings = getAccounts()
   const [accountFilter, setAccountFilter] = useState<Array<string>>([]);
   const [zoomFilter, setZoomFilter] = useState<{
     from: dayjs.Dayjs;
@@ -42,13 +46,11 @@ export const DataContent = () => {
     const endDate = historyEntries[historyEntries.length - 1]?.date;
 
     console.time('grouping');
-    const groupedByAccount: Record<string, AccountHistoryEntryType[]> =
-      //@ts-ignore
-      Object.groupBy(historyEntries, (entry) => entry.account);
-    const groupedByDate: Record<string, AccountHistoryEntryType[]> =
-      //@ts-ignore
+    const groupedByAccount =
+      Object.groupBy(historyEntries, (entry) => entry.account.identifier);
+    const groupedByDate =
       Object.groupBy(historyEntries, (entry) =>
-        dateToString(entry.date as Dayjs)
+        dateToString(entry.date)
       );
 
     console.timeEnd('grouping');
@@ -64,6 +66,7 @@ export const DataContent = () => {
         let dateTransactions = groupedByDate[dateToString(date)!]?.filter(
           ({ account: entryAccount }) => account === entryAccount.identifier
         );
+        
         if (!precalcSeries[account])
           precalcSeries[account] = [] as PreGraphEntryType[];
         if (!dateTransactions?.length)
@@ -116,9 +119,9 @@ export const DataContent = () => {
 
   const options: EChartsOption = {
     tooltip: {
-      backgroundColor: 'var(--tw-bg-opacity)',
+     // backgroundColor: 'var(--tw-bg-opacity)',
       textStyle: {
-        color: '#fff',
+     //   color: '#fff',
       },
       trigger: 'axis',
     },
@@ -132,6 +135,7 @@ export const DataContent = () => {
         formatter: (value: string) => dateToString(stringToDate(value)),
       },
     },
+    darkMode: true,
     yAxis: {
       type: 'value',
     },
@@ -167,7 +171,9 @@ export const DataContent = () => {
         <Button>Import New Data</Button>
       </Link>
       <Flex>
-        {series.map(({ account }) => (
+        {series.map(({ account }) =>{
+const accountText = accountSettings.find(acc=>acc.key === account)?.value.name || account
+          return (
           <Button
             key={account}
             variant={
@@ -177,9 +183,9 @@ export const DataContent = () => {
             }
             onClick={() => toggleAccountFilter(account)}
           >
-            {account}
+            {accountText}
           </Button>
-        ))}
+        )})}
       </Flex>
       <Card>
         <ReactECharts
@@ -188,6 +194,7 @@ export const DataContent = () => {
           onEvents={{ dataZoom: onDataZoom }}
         />
       </Card>
+     <AccountSettings/>
     </Flex>
   );
 };
