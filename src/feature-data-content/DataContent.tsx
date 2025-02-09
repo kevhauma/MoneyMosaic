@@ -10,6 +10,8 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useAccounts } from '@/feature-data-store/useAccounts';
 import { AccountSettings } from '@/feature-account-settings';
+import { HistoryEntryDetail } from '@/feature-history-entry-detail';
+import { HistoryList } from '@/feature-history-entry-detail/HistoryList';
 const account_start_saldo = {
   BE55731028883844: 718.16, //1669.18,
   BE70746031270525: 0, //6970.55,
@@ -21,7 +23,7 @@ type GraphEntryType = [string, number];
 export const DataContent = () => {
   const { getHistory } = useHistory();
   const { getAccounts } = useAccounts();
-  const accountSettings = getAccounts()
+  const accountSettings = getAccounts();
   const [accountFilter, setAccountFilter] = useState<Array<string>>([]);
   const [zoomFilter, setZoomFilter] = useState<{
     from: dayjs.Dayjs;
@@ -41,17 +43,22 @@ export const DataContent = () => {
       setAccountFilter((prevFilter) => [...prevFilter, account]);
     }
   };
+  const randomNumber = Math.floor(Math.random() * historyEntries.length);
+
+  const randomEntry = historyEntries.at(randomNumber)!;
+  console.log(historyEntries.length, randomNumber, randomEntry);
   const series = useMemo(() => {
     const startDate = historyEntries[0]?.date;
     const endDate = historyEntries[historyEntries.length - 1]?.date;
 
     console.time('grouping');
-    const groupedByAccount =
-      Object.groupBy(historyEntries, (entry) => entry.account.identifier);
-    const groupedByDate =
-      Object.groupBy(historyEntries, (entry) =>
-        dateToString(entry.date)
-      );
+    const groupedByAccount = Object.groupBy(
+      historyEntries,
+      (entry) => entry.account.identifier
+    );
+    const groupedByDate = Object.groupBy(historyEntries, (entry) =>
+      dateToString(entry.date)
+    );
 
     console.timeEnd('grouping');
     console.time('blank-filling');
@@ -66,7 +73,7 @@ export const DataContent = () => {
         let dateTransactions = groupedByDate[dateToString(date)!]?.filter(
           ({ account: entryAccount }) => account === entryAccount.identifier
         );
-        
+
         if (!precalcSeries[account])
           precalcSeries[account] = [] as PreGraphEntryType[];
         if (!dateTransactions?.length)
@@ -119,9 +126,9 @@ export const DataContent = () => {
 
   const options: EChartsOption = {
     tooltip: {
-     // backgroundColor: 'var(--tw-bg-opacity)',
+      // backgroundColor: 'var(--tw-bg-opacity)',
       textStyle: {
-     //   color: '#fff',
+        //   color: '#fff',
       },
       trigger: 'axis',
     },
@@ -166,26 +173,29 @@ export const DataContent = () => {
   };
 
   return (
-    <Flex vertical className="border">
+    <Flex vertical className="border max-h-full h-full">
       <Link replace href="/import">
         <Button>Import New Data</Button>
       </Link>
       <Flex>
-        {series.map(({ account }) =>{
-const accountText = accountSettings.find(acc=>acc.key === account)?.value.name || account
+        {series.map(({ account }) => {
+          const accountText =
+            accountSettings.find((acc) => acc.key === account)?.value.name ||
+            account;
           return (
-          <Button
-            key={account}
-            variant={
-              !accountFilter.length || accountFilter.includes(account)
-                ? undefined
-                : 'secondary'
-            }
-            onClick={() => toggleAccountFilter(account)}
-          >
-            {accountText}
-          </Button>
-        )})}
+            <Button
+              key={account}
+              variant={
+                !accountFilter.length || accountFilter.includes(account)
+                  ? undefined
+                  : 'secondary'
+              }
+              onClick={() => toggleAccountFilter(account)}
+            >
+              {accountText}
+            </Button>
+          );
+        })}
       </Flex>
       <Card>
         <ReactECharts
@@ -194,7 +204,11 @@ const accountText = accountSettings.find(acc=>acc.key === account)?.value.name |
           onEvents={{ dataZoom: onDataZoom }}
         />
       </Card>
-     <AccountSettings/>
+      <AccountSettings />
+      {/* {historyEntries.length > 0 && <HistoryEntryDetail entry={randomEntry} />} */}
+      <Flex  vertical className=" flex-grow min-h-100 overflow-auto">
+      <HistoryList/>
+      </Flex>
     </Flex>
   );
 };

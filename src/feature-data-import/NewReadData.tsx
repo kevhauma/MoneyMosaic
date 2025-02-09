@@ -9,6 +9,7 @@ import { DateFieldStep } from './inputSteps/DateFieldStep';
 import { stringToFloat } from '@/libs/utils';
 import { TransferFieldStep } from './inputSteps/TransferFieldStep';
 import { useAccounts } from '@/feature-data-store/useAccounts';
+import { AccountHistoryEntryType } from '@/types';
 
 export const NewReadData = () => {
   const { addEntries } = useHistory();
@@ -60,7 +61,8 @@ export const NewReadData = () => {
       !descriptionField
     )
       return;
-    const entries = csvData.map((obj) => ({
+    const entries: AccountHistoryEntryType[] = csvData.map((obj) => {
+      const entry = {
       amount:
         stringToFloat(obj[amountField], amountSeperator || ',') ||
         stringToFloat(obj[debitField], debitSeperator || ',') ||
@@ -69,10 +71,31 @@ export const NewReadData = () => {
       account: { identifier: obj[accountField], name: obj[accountName] },
       recipient: { identifier: obj[recipientField], name: obj[recipientName] },
       description: obj[descriptionField],
-    }));
+      rawData: obj,
+    }
+    if(entry.recipient.name) return entry
+    
+    if(entry.description.includes('GOOGLE PAY') || entry.description.includes('BETALING VIA BANCONTACT') || entry.description.includes("BETALING AANKOPEN")){
+      const [first, second] = entry.description.split("UUR")
+      const [name, last] = (second||first).split("MET")
+      entry.recipient.name = (name||last).trim()
+    }
+    if(entry.description.includes('GELDOPNEMING')||entry.description.includes('STORTING')){
+      const [first, second] = entry.description.split("UUR")
+      const [name, last] = (second||first).split("MET")
+      entry.recipient.name = `CASH: ${(name||last).trim()}`
+    }
+    if(entry.description.includes('PAYPAL')){
+      entry.recipient.name = `PAYPAL`
+    }
+  
+    return entry
+  });
+
+    
 
     const accounts = entries.reduce((uniqueAccounts,entry)=>{
-      uniqueAccounts[entry.account.identifier] = entry.account.name
+      uniqueAccounts[entry.account.identifier] = entry.account.name!
 
       return uniqueAccounts
     },{} as Record<string,string>)

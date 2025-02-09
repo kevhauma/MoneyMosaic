@@ -9,4 +9,5 @@ export type AccountHistoryEntryType = {
   account: AccountType;
   recipient: AccountType;
   description?: string;
+  rawData: Record<string,string>
 };
