@@ -1,1 +1,18 @@
-<p>import-page works!</p>
+<section>
+  <section class="flex gap-2">
+    @for(step of importSteps; track step.label){
+    <button class="" [disabled]="step.form.invalid && $index > importStepIndex()" (click)="setIndex($index)">
+      {{ step.label }} {{ step.form.valid }}
+    </button>
+    }
+  </section>
+  @if(currentStep().component){
+  <ng-container
+    [ngComponentOutlet]="currentStep().component!"
+    [ngComponentOutletInputs]="{ form: currentStep().form }"
+  />
+  } @else {
+  <div>page {{ importStepIndex() }} not implemented yet</div>
+  }
+  <button (click)="submit()">next</button>
+</section>

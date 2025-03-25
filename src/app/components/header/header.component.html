@@ -1,26 +1,28 @@
 <div>
-  <section class="flex justify-between">
+  <section class="flex justify-between !mb-3">
     <div class="flex align-top gap-4">
-      <a href="/" class="flex flex-col justify-end">
+      <a routerLink="/" class="flex flex-col justify-end">
         <h1 class="!m-0">Money Mosaic</h1>
       </a>
-      <a href="/dashboard" class="flex flex-col justify-end">
+      <a routerLink="/dashboard" class="flex flex-col justify-end">
         <h3 class="!m-0">Dashboard</h3>
       </a>
     </div>
     <div>
-      <button class="outline">Import data</button>
+      <button  routerLink="/dashboard/import" class="outline">Import data</button>
     </div>
   </section>
-  @if((breadcrumbs$ | async)?.length){
-
-  <section class="flex">
-    <a href="/"> Home </a>
-    @for(bc of breadcrumbs$ | async; track bc.url){
-    <div class="mx-2">&gt;</div>
-    <a [href]="bc.url"> {{ bc.label }} </a>
-
-    }
-  </section>
-  }
+  <!-- @if((breadcrumbLenght$ | async)){
+    
+    <section class="flex">
+      <a href="/"> Home </a>
+      @for(bc of (breadcrumbsService.breadcrumbs$ | async); track bc.url){
+        <div class="mx-2">&gt;</div>
+        <a [routerLink]="[bc.url]"> {{ bc.label }} </a>
+        
+      }
+    </section> 
+  }-->
+  <!-- <div>length: {{ breadcrumbLenght$ | async }}</div>
+  <div>crumbs: {{ breadcrumbsService.breadcrumbs$ | async | json }}</div> -->
 </div>

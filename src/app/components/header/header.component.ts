@@ -1,15 +1,22 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { map } from 'rxjs';
 import { BreadcrumbsService } from '../../services/breadcrumbs.service';
 
 @Component({
   selector: 'app-header',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, RouterLink,JsonPipe],
   templateUrl: './header.component.html',
 })
 
 
 
 export class HeaderComponent {
-    breadcrumbs$ = inject(BreadcrumbsService).breadcrumbs$
+  breadcrumbsService = inject(BreadcrumbsService)
+  breadcrumbLenght$ = this.breadcrumbsService.breadcrumbs$.pipe(map(bcs => bcs && bcs.length > 0))
+
+  ngOnInit(){
+   // this.breadcrumbsService.breadcrumbs$.pipe(mergeMap(() => this.breadcrumbLenght$,(bcs,length)=>([bcs,length]))).subscribe(([bcs,length])=>console.log(bcs,length))
+  }
 }
