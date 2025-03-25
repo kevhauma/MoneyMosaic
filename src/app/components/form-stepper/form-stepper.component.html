@@ -1,0 +1,25 @@
+<section>
+  <section class="flex gap-2 flex-wrap">
+    @for(step of steps(); track step.label){
+    <button
+      class="{{ step.form.valid ? 'success' : undefined }}"
+      [disabled]="isStepDisabled($index)"
+      (click)="setIndex($index)"
+    >
+      @if(step.form.valid){
+        <app-checkmark-icon />
+      }
+      {{ step.label }}
+    </button>
+    }
+  </section>
+  @if(currentStep().component){
+  <ng-container
+    [ngComponentOutlet]="currentStep().component!"
+    [ngComponentOutletInputs]="{ form: currentStep().form }"
+  />
+  } @else {
+  <div>page {{ stepIndex() }} not implemented yet</div>
+  }
+  <button (click)="next()">next</button>
+</section>
