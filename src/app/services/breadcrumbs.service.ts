@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 
 export type BreadCrumb = { label: string, url: string }
 
@@ -12,7 +12,8 @@ export class BreadcrumbsService {
   route = inject(ActivatedRoute)
   breadcrumbs$ = this.router.events.pipe(
     filter(e=>e instanceof ActivationEnd),
-    map(() => this.createBreadcrumbs(this.route.root))
+    map(() => this.createBreadcrumbs(this.route.root)),
+    shareReplay()
   );
 
   private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: BreadCrumb[] = []): BreadCrumb[] {

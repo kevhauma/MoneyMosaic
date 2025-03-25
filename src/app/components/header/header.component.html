@@ -9,20 +9,19 @@
       </a>
     </div>
     <div>
-      <button  routerLink="/dashboard/import" class="outline">Import data</button>
+      <button routerLink="/dashboard/import" class="outline">
+        Import data
+      </button>
     </div>
   </section>
-  <!-- @if((breadcrumbLenght$ | async)){
-    
-    <section class="flex">
-      <a href="/"> Home </a>
-      @for(bc of (breadcrumbsService.breadcrumbs$ | async); track bc.url){
-        <div class="mx-2">&gt;</div>
-        <a [routerLink]="[bc.url]"> {{ bc.label }} </a>
-        
-      }
-    </section> 
-  }-->
-  <!-- <div>length: {{ breadcrumbLenght$ | async }}</div>
-  <div>crumbs: {{ breadcrumbsService.breadcrumbs$ | async | json }}</div> -->
+
+  @if((hasBreadcrumbs$ |async)){
+  <section class="flex">
+    <a routerLink="/"> Home </a>
+    @for(bc of breadcrumbs$|async; track bc.url){
+    <div class="mx-2">&gt;</div>
+    <a [routerLink]="[bc.url]"> {{ bc.label }} </a>
+    }
+  </section>
+  }
 </div>
