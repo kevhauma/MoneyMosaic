@@ -11,7 +11,7 @@ export const useAccounts = () => {
     return accounts;
   };
 
-  const setSetting = (accountKey: string, setting: AccountSettingsType) => {
+  const setSetting = (accountKey: string, setting: Partial<AccountSettingsType>) => {
     const existingKeys = accounts.map((entry) => entry.key);
 
     if (existingKeys.includes(accountKey)) {
@@ -22,7 +22,7 @@ export const useAccounts = () => {
       const foundSetting = structuredClone(foundSettings?.at(0));
       if (!foundSetting) return;
 
-      foundSetting.value = setting;
+      foundSetting.value = {...foundSetting, ...setting};
       setAccounts([...(otherSettings || []), foundSetting]);
     } else
       setAccounts((prev) => [

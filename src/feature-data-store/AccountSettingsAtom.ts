@@ -3,6 +3,8 @@ import { localStorageEffect } from '@/libs/utils';
 
 export type AccountSettingsType =  {
   name: string;
+  startAmount?:number;
+  order: string;
 };
 export type AccountSettingAtomEntry = {
   key: string;
