@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+  <label for="csvs">Csv Files </label>
+  <input id="csvs" type="file" formControlName="files" />
+  <label for="csvs">seperator </label>
+  <input id="csvs" type="text" formControlName="csvSeperator" />
+  <label for="headers">
+    <input type="checkbox" id="headers" formControlName="csvHeader" />
+    has headers
+  </label>
+</form>

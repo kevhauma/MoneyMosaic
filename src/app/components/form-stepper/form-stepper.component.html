@@ -7,19 +7,21 @@
       (click)="setIndex($index)"
     >
       @if(step.form.valid){
-        <app-checkmark-icon />
+      <app-checkmark-icon />
       }
       {{ step.label }}
     </button>
     }
   </section>
-  @if(currentStep().component){
-  <ng-container
-    [ngComponentOutlet]="currentStep().component!"
-    [ngComponentOutletInputs]="{ form: currentStep().form }"
-  />
-  } @else {
-  <div>page {{ stepIndex() }} not implemented yet</div>
-  }
-  <button (click)="next()">next</button>
+  <section>
+    @if(currentStep().component){
+    <ng-container
+      [ngComponentOutlet]="currentStep().component!"
+      [ngComponentOutletInputs]="{ form: currentStep().form }"
+    />
+    } @else {
+    <div>page {{ stepIndex() }} not implemented yet</div>
+    }
+    <button (click)="next()">next</button>
+  </section>
 </section>

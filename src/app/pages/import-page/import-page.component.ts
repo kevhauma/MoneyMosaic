@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CsvImportStepComponent, DateImportStepComponent, TransactionImportStepComponent } from '../../components/data-import';
 import { FormStepperComponent, ImportStep } from '../../components/form-stepper/form-stepper.component';
-import { DateImportStepComponent, TransactionImportStepComponent } from '../../components/import/';
 
 
 @Component({
@@ -42,7 +42,7 @@ export class ImportPageComponent {
   });
 
   importSteps: ImportStep<any>[] = [
-    { label: "File Import", form: this.importForm.controls.csv,  },
+    { label: "File Import", form: this.importForm.controls.csv, component: CsvImportStepComponent },
     { label: "Transaction", form: this.importForm.controls.numbers, component: TransactionImportStepComponent },
     { label: "Date", form: this.importForm.controls.date, component: DateImportStepComponent },
     { label: "Accounts", form: this.importForm.controls.accounts },
